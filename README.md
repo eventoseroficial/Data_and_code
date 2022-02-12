@@ -1,5 +1,3 @@
-# Data_and_code
-
 # Compartilhe o seu banco de dados e código R para o VI Seminário Internacional de Estatística com R  
 
 ### O SER segue as diretrizes da pesquisa reprodutível. Nesse sentido, pedimos aos palestrantes que compartilhem os bancos de dados, códigos R e slides utilizados na palestra.
