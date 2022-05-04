@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Palestra: Visualização de dados através do pacote dubois <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "200px"/>
+# <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "160px"/> Palestra: Visualização de dados através do pacote dubois 
 
 Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
 
@@ -22,16 +22,13 @@ Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
 
 ### Exemplo de uso do pacote
 
-```{r grafico, echo=TRUE, warning=FALSE}
+```{r grafico, echo=TRUE, warning=FALSE, message=FALSE}
 # Instala o pacote
 # install.packages("devtools")
 # devtools::install_github("IcaroBernardes/dubois")
 
 # Carrega o pacote e outros auxiliares
 library(dubois)
-library(readr)
-library(dplyr)
-library(tidyr)
 
 # Busca os dados sobre trabalhadores em cargos de comando contido no pacote
 data <- dubois::managers
@@ -63,4 +60,4 @@ dubois::db_area(data = data, order = "year", cat1 = "black", cat2 = "white",
 
 ### Resumo
 
-W.E.B. Du Bois, sociólogo americano e gênio do *dataviz* produziu gráficos vanguardistas em sua exposição na Feira de Paris de 1900. Esse trabalho inspirou a comunidade de visualização de dados a reproduzir os trabalhos dele com elementos contemporâneos. O pacote [dubois](https://github.com/IcaroBernardes/dubois) criado por Ícaro Bernardes é um dos produtos dessa comunidade. O pacote está em desenvolvimento, mas já contém uma função, dubois::db_area, a qual permite fazer um gráfico de área com porcentagens de duas categorias. Esse pacote busca facilitar o uso do estilo de Du Bois para usuários não muito familiarizados com ggplot2, porém usuários experientes podem ir além e explorar as funções e customizar ainda mais os gráficos. O pacote também deve tornar disponíveis em inglês recortes de bancos de dados do IBGE com foco em estatísticas sobre a desigualdade racial no Brasil.
+W.E.B. Du Bois, sociólogo americano e gênio do *dataviz* produziu gráficos vanguardistas em sua exposição na Feira de Paris de 1900. Esse trabalho inspirou a comunidade de visualização de dados a reproduzir os trabalhos dele com elementos contemporâneos. O pacote [dubois](https://github.com/IcaroBernardes/dubois) criado por Ícaro Bernardes é um dos produtos dessa comunidade. O pacote está em desenvolvimento, mas já contém uma função, **db_area**, a qual permite fazer um gráfico de área com porcentagens de duas categorias. Esse pacote busca facilitar o uso do estilo de Du Bois para usuários não muito familiarizados com ggplot2, porém usuários experientes podem ir além ao explorar as funções e customizar ainda mais os gráficos. O pacote também deve tornar disponíveis, em inglês, recortes de bancos de dados do IBGE com foco em estatísticas sobre a desigualdade racial no Brasil. As futuras adições ao pacote devem ser baseadas em gráficos da [#DuBoisChallenge2022](https://github.com/IcaroBernardes/webdubois)

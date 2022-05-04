@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Palestra: Visualização de dados através do pacote dubois <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "200px"/>
+# <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "200px"/> Palestra: Visualização de dados através do pacote dubois
 
 Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
 
@@ -20,17 +20,6 @@ Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
 
 # Carrega o pacote e outros auxiliares
 library(dubois)
-library(readr)
-library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-library(tidyr)
 
 # Busca os dados sobre trabalhadores em cargos de comando contido no pacote
 data <- dubois::managers
