@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "200px"/> Palestra: Visualização de dados através do pacote dubois
+# <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "160px"/> Palestra: Visualização de dados através do pacote dubois
 
 Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
 
@@ -56,10 +56,12 @@ trabalho inspirou a comunidade de visualização de dados a reproduzir os
 trabalhos dele com elementos contemporâneos. O pacote
 [dubois](https://github.com/IcaroBernardes/dubois) criado por Ícaro
 Bernardes é um dos produtos dessa comunidade. O pacote está em
-desenvolvimento, mas já contém uma função, dubois::db_area, a qual
-permite fazer um gráfico de área com porcentagens de duas categorias.
-Esse pacote busca facilitar o uso do estilo de Du Bois para usuários não
+desenvolvimento, mas já contém uma função, **db_area**, a qual permite
+fazer um gráfico de área com porcentagens de duas categorias. Esse
+pacote busca facilitar o uso do estilo de Du Bois para usuários não
 muito familiarizados com ggplot2, porém usuários experientes podem ir
-além e explorar as funções e customizar ainda mais os gráficos. O pacote
-também deve tornar disponíveis em inglês recortes de bancos de dados do
-IBGE com foco em estatísticas sobre a desigualdade racial no Brasil.
+além ao explorar as funções e customizar ainda mais os gráficos. O
+pacote também deve tornar disponíveis, em inglês, recortes de bancos de
+dados do IBGE com foco em estatísticas sobre a desigualdade racial no
+Brasil. As futuras adições ao pacote devem ser baseadas em gráficos da
+[#DuBoisChallenge2022](https://github.com/IcaroBernardes/webdubois)
