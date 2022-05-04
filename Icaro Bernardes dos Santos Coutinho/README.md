@@ -1,0 +1,85 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# Share Your Data and Code <img src="https://github.com/IcaroBernardes/dubois/blob/master/man/figures/dubois.png" align="right" width = "120px"/>
+
+Palestra: Visualização de dados através do pacote dubois
+
+Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
+
+### Links úteis
+
+-   [Slides em
+    PDF](https://github.com/eventoseroficial/Data_and_Code/blob/main/Beatriz%20Milz/slides.pdf)
+-   [Pacote
+    mananciais](https://beatrizmilz.github.io/mananciais/index.html)
+-   [Exemplo de base de
+    dados](https://github.com/eventoseroficial/Data_and_Code/blob/main/Beatriz%20Milz/dados_exemplo_mananciais.Rds) -
+    gerado no código abaixo!
+
+### Exemplo de uso do pacote
+
+``` r
+# Instala o pacote
+# install.packages("devtools")
+# devtools::install_github("IcaroBernardes/dubois")
+
+# Carrega o pacote e outros auxiliares
+library(dubois)
+library(readr)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+library(tidyr)
+
+# Busca os dados sobre trabalhadores em cargos de comando contido no pacote
+data <- dubois::managers
+
+# Exporta os dados para que fiquem disponíveis neste repositório
+readr::write_rds(data, file = "gestores.Rds")
+
+# Faz pequenas manipulações nos dados
+data <- data %>%
+  dplyr::select(race, year, pct_bosses_total) %>%
+  tidyr::pivot_wider(names_from = "race",
+                     values_from = "pct_bosses_total")
+
+# Define título, subtítulo e mensagem
+title <- "PARTICIPATION IN MANAGERIAL POSITIONS BY RACE IN BRAZIL."
+subtitle <- "INSPIRED BY: W.E.B. DU BOIS | DATA FROM: IBGE | GRAPHIC BY: ICARO BERNARDES"
+message <- "IN THE SERIES, USUALLY WHITES OCCUPY SLIGHTLY LESS GENERAL WORK POSITIONS. HOWEVER WHITES OCCUPY WAY MORE MANAGERIAL POSITIONS THAN BLACKS"
+
+# Faz uso da função. A figura é salva no working directory
+dubois::db_area(data = data, order = "year", cat1 = "black", cat2 = "white",
+                limits = c(-3,4), filename = "managers.png",
+                title = title,
+                subtitle = subtitle,
+                message = message)
+```
+
+![](managers.png)
+
+### Resumo
+
+O GitHub Actions [GHA](https://docs.github.com/pt/actions) permite
+automatizar fluxos de trabalho de desenvolvimento de pacotes em R. Nessa
+palestra, será mostrado alguns exemplos de uso de GitHub Actions no
+pacote Mananciais, que disponibiliza dados sobre o volume operacional em
+reservatórios utilizados para abastecimento público na Região
+Metropolitana de São Paulo. Os exemplos que utilizam GHA são:
+atualização da base de dados, checagem do pacote, execução de testes e
+avaliação da cobertura de testes. O pacote foi desenvolvido por Beatriz
+Milz, e pode ser acessado em:
+<https://beatrizmilz.github.io/mananciais/index.html> . Este pacote foi
+pensado para atender demandas de pessoas pesquisadoras que não somente
+utilizam R, disponibilizando também a base de dados atualizada
+diariamente em csv e em xlsx.
+
+-   [Apresentações passadas disponíveis neste
+    link](https://beatrizmilz.com/apresentacoes.html).

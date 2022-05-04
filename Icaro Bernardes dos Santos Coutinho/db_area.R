@@ -65,11 +65,11 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
                     names = c(cat1, cat2), title, subtitle, message,
                     path = getwd(), filename) {
 
-  # 0. Early verification of the arguments
-  ## Converts limits to numeric (to avoid the edge case of a integer class)
+  # 0. Verificação inicial dos argumentos
+  ## Converte limits a numérico (evita casos onde o número tem classe inteira)
   limits = as.numeric(limits) %>% stats::na.exclude()
 
-  ## Confirms the classes of the arguments
+  ## Confirma a classe dos argumentos
   verify_class_fun <- function(arg, class) {
     sym = rlang::sym(arg)
     if (!(class %in% class(rlang::eval_tidy(sym)))) {
@@ -84,7 +84,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
   )
   purrr::pwalk(verify_class_data, ~verify_class_fun(.x, .y))
 
-  ## Confirms that the variables are really present in the argument "data"
+  ## Confirma que as variáveis estão realmente presentes em data
   verify_varnames_fun <- function(name, var) {
     status = var %in% colnames(data)
     if (!status) {
@@ -97,7 +97,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
   )
   purrr::pwalk(verify_varnames_data, ~verify_varnames_fun(.x, .y))
 
-  ## Confirms that both categories are numerical
+  ## Confirma que ambas categorias são numéricas
   verify_varnum_fun <- function(name, var) {
     sym = rlang::sym(var)
     status = data %>%
@@ -114,7 +114,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
   )
   purrr::pwalk(verify_varnum_data, ~verify_varnum_fun(.x, .y))
 
-  ## Alerts the user about non-integers in dpi and seed
+  ## Alerta o usuário em caso de dpi e seed não-inteiras
   verify_whole_fun <- function(name, var) {
     tol = .Machine$double.eps^0.5
     result = abs(var - round(var)) < tol
@@ -128,7 +128,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
   )
   purrr::pwalk(verify_whole_data, ~verify_whole_fun(.x, .y))
 
-  ## Confirms that limits and names have the correct length
+  ## Confirma que limits e names tem o comprimento correto
   verify_length_fun <- function(name, var) {
     amount = var %>% length()
     if (amount != 2) {
@@ -141,44 +141,44 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
   )
   purrr::pwalk(verify_length_data, ~verify_length_fun(.x, .y))
 
-  ## Confirms that inferior and superior limits are in the correct order
+  ## Confirma que os limites inferior e superior estão na ordem correta
   if (limits[1] > limits[2]) {
     stop("limits must be given in the following order: inferior, superior", call. = FALSE)
   }
 
-  ## Confirms that filename has a valid extension for ggplot2::ggsave to use
+  ## Confirma que filename tem uma extensão válida para uso por parte de ggplot2::ggsave
   file_exts <- c(".eps", ".ps", ".tex", ".pdf", ".jpeg",
                  ".tiff", ".png", ".bmp", ".svg", ".wmf")
   if (stringr::str_detect(filename, paste0(file_exts, collapse = "|"), negate = TRUE)) {
     stop(glue::glue("filename must contain one of these extensions: {paste0(file_exts, collapse = ', ')}"), call. = FALSE)
   }
 
-  # 1. Manages text rendering
-  ## Verifies if the "Teko" font is available to be used by showtext
-  ## and downloads it, if absent
+  # 1. Cuida da impressão do texto na imagem
+  ## Verifica se a fonte "Teko" está disponível para ser
+  ## usada por showtext e baixa ela se estiver ausente
   if (!("Teko" %in% sysfonts::font_families())) {
     sysfonts::font_add_google(name = "Teko")
   }
 
-  ## Defines the resolution of texts rendered by showtext for graphic devices
+  ## Define a resolução de textos impressos por showtext nos dispositivos gráficos
   showtext::showtext_opts(dpi = dpi)
 
-  ## Activates the showtext rendering for graphic devices.
-  ## BE AWARE! showtext has bad interaction with some grid plots
-  ## (noticeable from the circlize package), so its best to create
-  ## them first and then use this package
+  ## Ativa o controle da impressão do texto por parte de showtext.
+  ## ATENÇÃO! showtext tem problemas na interalção com alguns plots
+  ## (notadamente do pacote circlize), então é melhor criar eles
+  ## primeiro e depois usar esse pacote
   showtext::showtext_auto()
 
-  # 2. Handles the data
-  ## Eliminates lines with absent data
+  # 2. Maneja os dados
+  ## Elimina linhas com dados ausentes
   data <- data %>%
     dplyr::filter(dplyr::if_all(.fns = ~ !is.na(.)))
 
-  ## Gets the total number of observations
+  ## Obtém o número total de observações
   n_obs <- dim(data)[1]
 
-  ## Keeps only data on the order of observations and the values of the two
-  ## categories. Also renames the variables
+  ## Mantém apenas os dados da ordem das observações e os
+  ## valores das duas categorias. Também as renomeia
   data <- data %>%
     dplyr::select(order, cat1, cat2) %>%
     dplyr::rename(
@@ -187,8 +187,8 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
       "cat2" = cat2
     )
 
-  ## Verifies if the sum of the pair of categories amounts to 100%.
-  ## If it is not, then converts the categories to percentages as such
+  ## Verifica se a soma do par de categorias é igual a 100%.
+  ## Caso não seja, converte as categorias a porcentagens que o são.
   check <- data %>%
     dplyr::mutate(
       pair = cat1 + cat2,
@@ -208,8 +208,8 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
       dplyr::select(-total)
   }
 
-  ## Guarantees that the order variable is ordered. If it is a character
-  ## converts it to a factor and takes the levels in the order they appear
+  ## Garante que a variável de ordem é ordenada. Se é um character,
+  ## converte a factor e toma os níveis na ordem que eles aparecem
   if (!is.numeric(data$order)) {
     if (!is.factor(data$order)) {
       data <- data %>%
@@ -218,7 +218,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
   }
   data <- data %>% dplyr::arrange(order)
 
-  ## Creates the labels for the highlighted category
+  ## Cria os rótulos para a categoria destacada
   highlight <- data %>%
     dplyr::mutate(
       cat1 = round(cat1, digits = 1),
@@ -229,7 +229,8 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
     ) %>%
     dplyr::pull(cat1)
 
-  ## Gets the first and last items in the set of order and converts them to numbers
+  ## Obtém o primeiro e último itens entre as
+  ## categorias da ordem e converte elas a números
   ord1 <- data %>%
     dplyr::slice(1L) %>%
     dplyr::mutate(order = as.numeric(order)) %>%
@@ -239,8 +240,8 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
     dplyr::mutate(order = as.numeric(order)) %>%
     dplyr::pull(order)
 
-  ## Calculates an area for the left of the
-  ## plot using a (kinda of) bounded random walk
+  ## Calcula uma área à esquerda do gráfico
+  ## usando algo como um bounded random walk
   withr::local_seed(seed)
   lft_area <- tibble::tibble(
     y = seq(ord1, ord2, res_step * (ord2 - ord1))
@@ -257,7 +258,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
       x = ifelse(x > 100, 100, x)
     )
 
-  ## Defines the names of the categories
+  ## Define os nomes das categorias
   categ_names <- data %>%
     dplyr::slice(1L:2L) %>%
     dplyr::summarise(
@@ -273,14 +274,14 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
     dplyr::select(-varname) %>%
     dplyr::mutate(label = toupper(names))
 
-  ## Defines the title, secondary axis title and message of the plot
+  ## Define o título, título do eixo secundário e mensagem do gráfico
   title <- paste0(toupper(title), "<br><span style='font-size:60px;'>", toupper(subtitle), "</span>")
   sectitle <- paste0("PERCENT<br>OF<br>", toupper(names[1]))
   message <- toupper(message) %>%
     stringr::str_wrap() %>%
     stringr::str_replace_all(pattern = "\n", "<br>")
 
-  ## Defines some layout constants
+  ## Define algumas constantes de layout
   lnhgt <- 0.8
   bgcolor <- "#d2b48c"
   l_marg <- 750 - 10 * max(stringr::str_length(data$order))
@@ -289,7 +290,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
     lb_sz <- 30
   }
 
-  ## Rearranges the data
+  ## Reorganiza os dados
   data <- data %>%
     tidyr::pivot_longer(
       cols = c("cat1", "cat2"),
@@ -297,25 +298,36 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
       values_to = "pct"
     )
 
-  ## Creates a new variable as the numeric counterpart of the order
+  ## Cria uma nova variável numérica com base na ordem
   data <- data %>%
     dplyr::mutate(num_order = as.numeric(order))
 
-  ## Creates the main plot
+  # 3. Produção do gráfico
+  ## Cria o gráfico
   p <- data %>%
     ggplot2::ggplot() +
+
+    ### Insere o par de áreas
     ggplot2::geom_area(ggplot2::aes(x = pct, y = num_order, fill = categ),
                        orientation = "y", size = 4, color = bgcolor,
                        position = ggplot2::position_stack(reverse = TRUE)
     ) +
+
+    ### Insere o efeito de "rasgo" à esquerda
     ggplot2::geom_ribbon(ggplot2::aes(xmin = x, xmax = 100, y = y),
                          fill = bgcolor, data = lft_area
     ) +
+
+    ### Insere o nome das categorias
     ggplot2::geom_text(ggplot2::aes(x = x, y = y, label = label),
                        color = "white",
                        size = 15, family = "Teko", data = categ_names
     ) +
+
+    ### Insere títulos e mensagem
     ggplot2::labs(title = title, subtitle = sectitle, caption = message, x = NULL, y = NULL) +
+
+    ### Reverte a escalas dos eixos e controla elementos delas
     ggplot2::scale_x_reverse(
       expand = ggplot2::expansion(0, 10), breaks = seq(25, 75, 25),
       label = scales::label_percent(scale = 1), position = "top"
@@ -330,10 +342,14 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
         labels = highlight
       )
     ) +
+
+    ### Aplica cores definidas para as áreas
     ggplot2::scale_fill_manual(
       values = c("#dc143c", "black"),
       guide = "none"
     ) +
+
+    ### Customiza elementos do gráfico
     ggplot2::theme(
       text = ggplot2::element_text(family = "Teko"),
       plot.margin = ggplot2::margin(t = 60, r = 400, b = 50, l = 400, unit = "pt"),
@@ -365,7 +381,7 @@ db_area <- function(data, order, cat1, cat2, dpi = 320, seed = 42,
       axis.ticks.y = ggplot2::element_blank()
     )
 
-  ## Saves the plot
+  ## Salva o gráfico
   file <- paste0(path, "/", filename)
   ggplot2::ggsave(file,
                   plot = p, dpi = dpi,
