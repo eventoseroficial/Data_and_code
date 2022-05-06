@@ -8,8 +8,12 @@ Por: [Ícaro Bernardes](https://github.com/IcaroBernardes)
 ### Links úteis
 
 -   [Slides em
-    PDF](https://github.com/IcaroBernardes/Data_and_code/blob/main/Icaro%20Bernardes%20dos%20Santos%20Coutinho/slides.pdf)
+    PDF](https://github.com/eventoseroficial/Data_and_code/blob/main/Icaro%20Bernardes%20dos%20Santos%20Coutinho/slides.pdf)
 -   [Pacote dubois](https://github.com/IcaroBernardes/dubois)
+-   [Código da função
+    db_area](https://github.com/eventoseroficial/Data_and_code/blob/main/Icaro%20Bernardes%20dos%20Santos%20Coutinho/db_area.R)
+-   [Banco de dados
+    ‘managers’](https://github.com/eventoseroficial/Data_and_code/blob/main/Icaro%20Bernardes%20dos%20Santos%20Coutinho/gestores.Rds)
 
 ### Exemplo de uso do pacote
 
