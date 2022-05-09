@@ -1,0 +1,193 @@
+---
+title: Renda Fixa usando R
+date: 2022-05-25
+output: html_notebook
+---
+
+```{r}
+library(bizdays)
+library(fixedincome)
+library(tidyverse)
+```
+
+## Definição de taxas de juros
+
+Uma taxa de juros possui tipicamente:
+
+- regime de capitalização: simples, composta, contínua
+- calendário: dias corridos, dias úteis (listagem de feriados)
+- regra de contagem de dias: business/252, 30/360
+
+### Exemplo
+
+Em 2022-05-04 -> SELIC = 12,75%
+
+```{r}
+spotrate(12.75 / 100,
+         compounding = "discrete",
+         daycount = "business/252",
+         calendar = "Brazil/ANBIMA"
+) -> selic
+selic
+```
+
+Para calcular a rentabilidade pelo período de 1 mês fazemos:
+
+```{r}
+t <- term(1, "month")
+compound(selic, t) - 1
+```
+
+$$
+(1 + SELIC)^{1/12} - 1
+$$
+
+para 1 dia
+
+```{r}
+compound(selic, term(1, "day")) - 1
+```
+
+$$
+(1 + SELIC)^{1/252} - 1
+$$
+
+```{r}
+spotrate(12.75 / 100,
+         compounding = "simple",
+         daycount = "actual/365",
+         calendar = "actual"
+) -> selicsim
+selicsim
+```
+
+```{r}
+compound(selicsim, term(1, "month")) - 1
+```
+
+$$
+\left(1 + SELICSIM\times\frac{1}{12}\right) - 1
+$$
+
+### Tabela de rentabilidade da SELIC
+
+```{r}
+tibble::tibble(
+    anos = term(c(1, seq(5, 20, 5)), "year"),
+    rentabilidade = compound(selic, anos) - 1
+)
+```
+
+```{r}
+cdbs <- read_csv("Renda Fixa Prefixado.csv",
+    locale = locale(decimal_mark = ","),
+    col_types = cols(
+        Nome = col_character(),
+        Taxa = col_double(),
+        Tipo = col_character(),
+        Prazo = col_integer(),
+        InvestimentoInicial = col_integer()
+    )
+)
+cdbs
+```
+
+```{r}
+cdbs <- cdbs |>
+    mutate(
+        Taxa = spotrate(
+            Taxa / 100, "discrete", "business/252", "Brazil/ANBIMA"
+        ),
+        Prazo = term(Prazo, "days")
+    ) |>
+    select(Nome, Taxa, Prazo, InvestimentoInicial)
+cdbs
+```
+
+```{r}
+cdbs |>
+    mutate(
+        ValorFuturo = InvestimentoInicial * compound(Taxa, Prazo)
+    )
+```
+
+## Rentabilidade de CDI
+
+```{r}
+cdi_s <- rbcb::get_series(
+    c(CDI = 4389),
+    start_date = "2000-01-01",
+    end_date = preceding(Sys.Date(), "Brazil/ANBIMA")
+)
+cdi_s
+```
+
+$$
+\prod_{t=1}^{N} (1 + CDI_t)^{1/252}
+$$
+
+```{r}
+cdi_s |>
+    mutate(
+        CDI = spotrate(
+            CDI / 100, "discrete", "business/252", "Brazil/ANBIMA"
+        ),
+        Fator1D = compound(CDI, term(1, "day")),
+        CDI_Acumulado = cumprod(Fator1D)
+    ) |>
+    ggplot(aes(x = date, y = CDI_Acumulado)) +
+    geom_line()
+```
+
+
+## Curvas de juros
+
+```{r}
+terms <- c(1, 25, 44, 66, 87, 108, 131, 152, 172, 192, 214, 236, 277)
+rates <- c(
+    0.1065, 0.111, 0.1138, 0.1168, 0.1189, 0.1207, 0.1219,
+    0.1227, 0.1235, 0.1234, 0.1236, 0.1235, 0.1235
+)
+curve <- spotratecurve(
+    rates, terms, "discrete", "business/252", "Brazil/ANBIMA",
+    refdate = as.Date("2022-02-23")
+)
+```
+
+```{r}
+curve
+```
+
+```{r}
+curve[c(1, 3, 5, 7)]
+```
+
+```{r}
+curve[[c(1, 44, 87, 131)]]
+```
+
+```{r}
+curve[[1:10]]
+```
+
+```{r}
+interpolation(curve) <- interp_linear()
+curve
+```
+
+```{r}
+curve[[1:10]]
+```
+
+```{r}
+plot(curve, use_interpolation = TRUE)
+```
+
+# Referências
+
+- [fixedincome](https://github.com/wilsonfreitas/R-fixedincome)
+- [bizdays](https://github.com/wilsonfreitas/R-bizdays)
+- [copom](https://github.com/wilsonfreitas/copom)
+- [rb3](https://github.com/wilsonfreitas/rb3)
+
+
