@@ -1,0 +1,200 @@
+---
+title: "R para educação"  
+subtitle: "Avaliação de intersecções entre raça e gênero"
+author: "Bruna Climaco"
+institute: "CDANAEP/GAMMA/UFBA"
+date: "2022/05/26 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: insert-logo.html
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+---
+
+
+```{r setup, include=FALSE,echo=TRUE}
+options(htmltools.dir.version = FALSE)
+library(readr)
+library(dplyr)
+
+dados_viol_sex_bahia_raca_cor <- read_delim("data/dados_viol_sex_bahia_raca_cor.csv",
+     ",", escape_double = FALSE, col_types = cols(ano = col_character(),
+         ignorado = col_integer(), nao_negras = col_integer(),
+         negras = col_integer(), total = col_integer()),
+     trim_ws = TRUE)
+
+
+```
+
+---
+background-image: url(img/CDnaEP_[VersaoHORIZONTAL-COR].png)
+background-position: 50% 50%
+class: center, bottom
+
+#Coordenação:
+## Karla Patrícia Oliveira Esquerre
+
+---
+background-image: url(img/tribunal_justica.png)
+background-position: 50% 50%
+class: center, bottom, inverse
+
+# Justiça
+
+---
+
+```{r , echo = FALSE, eval=TRUE }
+
+knitr::kable(head(dados_viol_sex_bahia_raca_cor,10),caption = "Número de mulheres vítimas de violência sexual na Bahia", format = 'html')
+```
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+
+---
+
+### Número de mulheres vítimas de violência sexual na Bahia
+
+```{r , echo = FALSE, eval=TRUE}
+library(dplyr)
+library(echarts4r)
+
+
+  dados_viol_sex_bahia_raca_cor %>%
+  e_charts(ano) %>%
+  e_bar(total)
+       
+```
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+---
+
+### Número de mulheres vítimas de violência sexual na Bahia - Código da tabela
+```{r , echo = TRUE, eval=FALSE}
+
+library(readr)
+library(dplyr)
+
+dados_viol_sex_bahia_raca_cor <- read_delim("data/dados_viol_sex_bahia_raca_cor.csv",
+     ",", escape_double = FALSE, col_types = cols(ano = col_character(),
+         ignorado = col_integer(), nao_negras = col_integer(),
+         negras = col_integer(), total = col_integer()),
+     trim_ws = TRUE)
+
+knitr::kable(head(dados_viol_sex_bahia_raca_cor,10),caption = "Número de mulheres vítimas de violência sexual na Bahia", format = 'html')
+```
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+
+---
+### Número de mulheres vítimas de violência sexual na Bahia - Código do gráfico total
+
+```{r , echo = TRUE, eval=FALSE}
+library(dplyr)
+library(echarts4r)
+
+
+  dados_viol_sex_bahia_raca_cor %>%
+  e_charts(ano) %>%
+  e_bar(total)
+       
+```
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+```{r , echo = FALSE, eval=TRUE}
+library(readr)
+library(dplyr)
+library(echarts4r)
+
+
+  dados_viol_sex_bahia_raca_cor %>%
+  e_charts(ano) %>%
+  e_bar(negras, stack = "grp") %>%
+  e_bar(nao_negras, stack = "grp") %>%
+  e_bar(ignorado, stack = "grp") %>%
+     e_tooltip(trigger = "item")
+ 
+```
+
+  **Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+```{r , echo = TRUE, eval=FALSE}
+library(readr)
+library(dplyr)
+library(echarts4r)
+
+
+  dados_viol_sex_bahia_raca_cor %>%
+  e_charts(ano) %>%
+  e_bar(negras, stack = "grp") %>%
+  e_bar(nao_negras, stack = "grp") %>%
+  e_bar(ignorado, stack = "grp") %>%
+     e_tooltip(trigger = "item")
+ 
+```
+
+  **Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+```{r , echo = FALSE, eval=TRUE}
+library(readr)
+library(dplyr)
+library(echarts4r)
+library(tidyr)
+
+
+dados_viol_sex_bahia_raca_cor %>%
+  gather(key = "categorias",value = "ocorrencias",-ano) %>%
+  group_by(categorias) %>%
+  e_charts() %>%
+  e_boxplot(ocorrencias) %>%
+  e_tooltip(trigger = "item") %>%
+  e_toolbox_feature(feature = "dataZoom")
+
+```
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)  
+
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+```{r , echo = TRUE, eval=FALSE}
+library(readr)
+library(dplyr)
+library(echarts4r)
+library(tidyr)
+
+
+dados_viol_sex_bahia_raca_cor %>%
+  gather(key = "categorias",value = "ocorrencias",-ano) %>%
+  group_by(categorias) %>%
+  e_charts() %>%
+  e_boxplot(ocorrencias) %>%
+  e_tooltip(trigger = "item") %>%
+  e_toolbox_feature(feature = "dataZoom")
+
+```
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)  
+
+---
+
+
+
+## Materiais e referências
+
+1. [App Segurança Pública](https://robsonpessoa.shinyapps.io/ssp_indicadores/)
+2. [Povoamento - exemplo](https://github.com/cienciadedadosnaep/rs_dados_justica_violenciacontraamulher)
+3. [Artigo: Dados sobre Feminicídio](https://artigo19.org/wp-content/blogs.dir/24/files/2018/03/Dados-Sobre-Feminic%c3%addio-no-Brasil-.pdf)
+4. [Echarts4R](https://echarts4r.john-coene.com/)
+5. [Apache Echarts](https://echarts.apache.org/en/index.html)
+
+

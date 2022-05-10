@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>R para educação</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Bruna Climaco" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/echarts4r/echarts-en.min.js"></script>
+    <script src="libs/echarts4r/ecStat.min.js"></script>
+    <script src="libs/echarts4r/dataTool.min.js"></script>
+    <script src="libs/echarts4r-binding/echarts4r.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R para educação
+## Avaliação de intersecções entre raça e gênero
+### Bruna Climaco
+### CDANAEP/GAMMA/UFBA
+### 2022/05/26 (updated: 2022-05-07)
+
+---
+
+
+
+
+
+---
+background-image: url(img/CDnaEP_[VersaoHORIZONTAL-COR].png)
+background-position: 50% 50%
+class: center, bottom
+
+#Coordenação:
+## Karla Patrícia Oliveira Esquerre
+
+---
+background-image: url(img/tribunal_justica.png)
+background-position: 50% 50%
+class: center, bottom, inverse
+
+# Justiça
+
+---
+
+&lt;table&gt;
+&lt;caption&gt;Número de mulheres vítimas de violência sexual na Bahia&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; ano &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; ignorado &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; nao_negras &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; negras &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 88 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 98 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 193 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 331 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 117 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 264 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 434 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 73 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 415 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 563 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 171 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 648 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 933 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 132 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 849 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1153 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 128 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 120 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 797 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1045 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 155 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 160 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 886 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1201 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2017 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 169 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 153 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 872 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1194 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+
+---
+
+### Número de mulheres vítimas de violência sexual na Bahia
+
+<div id="htmlwidget-8327dc90c71c77c086d0" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8327dc90c71c77c086d0">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true}],"xAxis":[{"data":["2009","2010","2011","2012","2013","2014","2015","2016","2017"],"type":"category","boundaryGap":true}],"legend":{"data":["total"]},"series":[{"data":[{"value":["2009"," 121"]},{"value":["2010"," 331"]},{"value":["2011"," 434"]},{"value":["2012"," 563"]},{"value":["2013"," 933"]},{"value":["2014","1153"]},{"value":["2015","1045"]},{"value":["2016","1201"]},{"value":["2017","1194"]}],"name":"total","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d"}]},"dispose":true},"evals":[],"jsHooks":[]}</script>
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+---
+
+### Número de mulheres vítimas de violência sexual na Bahia - Código da tabela
+
+```r
+library(readr)
+library(dplyr)
+
+dados_viol_sex_bahia_raca_cor &lt;- read_delim("data/dados_viol_sex_bahia_raca_cor.csv",
+     ",", escape_double = FALSE, col_types = cols(ano = col_character(),
+         ignorado = col_integer(), nao_negras = col_integer(),
+         negras = col_integer(), total = col_integer()),
+     trim_ws = TRUE)
+
+knitr::kable(head(dados_viol_sex_bahia_raca_cor,10),caption = "Número de mulheres vítimas de violência sexual na Bahia", format = 'html')
+```
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+
+---
+### Número de mulheres vítimas de violência sexual na Bahia - Código do gráfico total
+
+
+```r
+library(dplyr)
+library(echarts4r)
+
+
+  dados_viol_sex_bahia_raca_cor %&gt;%
+  e_charts(ano) %&gt;%
+  e_bar(total)
+```
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+<div id="htmlwidget-e975f74f4cd2ca14e5b0" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e975f74f4cd2ca14e5b0">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true}],"xAxis":[{"data":["2009","2010","2011","2012","2013","2014","2015","2016","2017"],"type":"category","boundaryGap":true}],"legend":{"data":["negras","nao_negras","ignorado"]},"series":[{"data":[{"value":["2009"," 88"]},{"value":["2010","193"]},{"value":["2011","264"]},{"value":["2012","415"]},{"value":["2013","648"]},{"value":["2014","849"]},{"value":["2015","797"]},{"value":["2016","886"]},{"value":["2017","872"]}],"name":"negras","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d","stack":"grp"},{"data":[{"value":["2009"," 19"]},{"value":["2010"," 40"]},{"value":["2011"," 53"]},{"value":["2012"," 73"]},{"value":["2013","114"]},{"value":["2014","132"]},{"value":["2015","120"]},{"value":["2016","160"]},{"value":["2017","153"]}],"name":"nao_negras","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d","stack":"grp"},{"data":[{"value":["2009"," 14"]},{"value":["2010"," 98"]},{"value":["2011","117"]},{"value":["2012"," 75"]},{"value":["2013","171"]},{"value":["2014","172"]},{"value":["2015","128"]},{"value":["2016","155"]},{"value":["2017","169"]}],"name":"ignorado","type":"bar","yAxisIndex":0,"xAxisIndex":0,"coordinateSystem":"cartesian2d","stack":"grp"}],"tooltip":{"trigger":"item"}},"dispose":true},"evals":[],"jsHooks":[]}</script>
+
+  **Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+
+```r
+library(readr)
+library(dplyr)
+library(echarts4r)
+
+
+  dados_viol_sex_bahia_raca_cor %&gt;%
+  e_charts(ano) %&gt;%
+  e_bar(negras, stack = "grp") %&gt;%
+  e_bar(nao_negras, stack = "grp") %&gt;%
+  e_bar(ignorado, stack = "grp") %&gt;%
+     e_tooltip(trigger = "item")
+```
+
+  **Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+<div id="htmlwidget-8dcfbd3cb7502b6088bc" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8dcfbd3cb7502b6088bc">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true}],"series":[{"name":"ocorrencias","type":"boxplot","data":[[14,98,128,169,172],[19,53,114,132,160],[88,264,648,849,886],[121,434,933,1153,1201]]},{"type":"scatter","data":[]}],"xAxis":[{"data":["ignorado","nao_negras","negras","total"],"type":"category"}],"tooltip":{"trigger":"item"},"toolbox":{"feature":{"dataZoom":[]}}},"dispose":true},"evals":[],"jsHooks":[]}</script>
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)  
+
+---
+### Número de mulheres vítimas de violência sexual na Bahia
+
+
+```r
+library(readr)
+library(dplyr)
+library(echarts4r)
+library(tidyr)
+
+
+dados_viol_sex_bahia_raca_cor %&gt;%
+  gather(key = "categorias",value = "ocorrencias",-ano) %&gt;%
+  group_by(categorias) %&gt;%
+  e_charts() %&gt;%
+  e_boxplot(ocorrencias) %&gt;%
+  e_tooltip(trigger = "item") %&gt;%
+  e_toolbox_feature(feature = "dataZoom")
+```
+
+**Fonte:** Rede Observatórios de Segurança Pública. [A cor da violência na Bahia - Uma análise dos homicídios e violência sexual na última década](http://observatorioseguranca.com.br/wordpress/wp-content/uploads/2021/09/A-cor-da-viole%CC%82ncia-na-Bahia-Uma-ana%CC%81lise-dos-homici%CC%81dios-e-viole%CC%82ncia-sexual-na-u%CC%81ltima-de%CC%81cada-FINAL.pdf)  
+
+---
+
+
+
+## Materiais e referências
+
+1. [App Segurança Pública](https://robsonpessoa.shinyapps.io/ssp_indicadores/)
+2. [Povoamento - exemplo](https://github.com/cienciadedadosnaep/rs_dados_justica_violenciacontraamulher)
+3. [Artigo: Dados sobre Feminicídio](https://artigo19.org/wp-content/blogs.dir/24/files/2018/03/Dados-Sobre-Feminic%c3%addio-no-Brasil-.pdf)
+4. [Echarts4R](https://echarts4r.john-coene.com/)
+5. [Apache Echarts](https://echarts.apache.org/en/index.html)
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(img/Logo_Gamma.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 110px;
+  height: 128px;
+  z-index: 0;
+}
+
+.logo_recossa {
+  background-image: url(img/03_Padrao_Fundo_Transparente.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  width: 110px;
+  height: 128px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+    el.innerHTML += '<div class="logo_recossa"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
