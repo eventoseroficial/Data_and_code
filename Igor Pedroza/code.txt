@@ -1,0 +1,71 @@
+# instal package
+
+install.packages("rcarbon")
+
+
+#Load package
+
+library(rcarbon)
+
+library(tidyverse)
+
+
+# manual data entry -
+
+x <- calibrate(x=660,
+               errors=30,
+               calCurves='shcal20')
+
+plot(x)
+
+plot(x,HPD=TRUE,credMass=0.95)
+
+plot(x,HPD=FALSE,credMass=0.95)
+
+#create dataframe
+#dummy database
+
+c14age <- c(560, 920, 1280, 2830, 3470)
+
+std_age <- c(40, 30, 30, 40, 40)
+
+curve <- c('shcal20', 'shcal20','shcal20','marine20', 'marine20')
+
+sample <- c('alfa-123','alfa-125', 'alfa-126','alfa-127', 'alfa-128')
+
+city <- c('Abreu e Lima', 'Tauá', 'Baturité', 'Cascavel', 'Beberibe')
+
+state <- c('PE', 'CE', 'CE', 'CE', 'CE')
+
+data <- data.frame(c14age, std_age, curve, sample, city, state)
+
+View(data)
+
+# Download and read in csv files
+
+url <- "https://raw.githubusercontent.com/letreiro/iv-ser-uff-archaeology/main/data/dataset.csv"
+
+data <- read.csv(file = url,
+               header = TRUE, sep = ",")
+
+data
+
+View(data)
+
+
+#filters
+
+data %>%
+  filter(c14age>600)
+
+data %>%
+  filter(c14age < 3000 & c14age > 1000)
+
+data %>%
+  filter(c14age > 3000 & curve == 'marine20')
+
+data %>%
+  filter(c14age > 1000 & state == 'CE')
+
+data %>%
+  filter(state == 'CE')

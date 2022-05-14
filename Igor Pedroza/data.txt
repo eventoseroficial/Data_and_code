@@ -1,0 +1,6 @@
+c14age,std_age,curve,sample,city,state
+560,40,shcal20,alfa-123,Abreu e Lima,PE
+920,30,shcal20,alfa-125,Tauá,CE
+1280,30,shcal20,alfa-126,Baturité,CE
+2830,40,marine20,alfa-127,Cascavel,CE
+3470,40,marine20,alfa-128,Beberibe,CE
