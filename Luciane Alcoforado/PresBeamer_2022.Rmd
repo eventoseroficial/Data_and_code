@@ -1,0 +1,1221 @@
+---
+title: "Mandalas, curvas clássicas e visualização com R"
+subtitle: "<br/>in:VI Seminário Internacional de Estatística com R"
+author: "Profs. Drs. Luciane Alcoforado & João Paulo Martins dos Santos"
+institute: "Academia da Força Aérea"
+date: "25 a 27 de maio de 2022 (updated: `r Sys.Date()`)"
+output: 
+  beamer_presentation:
+  includes:
+      in_header: mystyle.tex
+  keep_tex: true
+theme: "AnnArbor"  
+---
+
+<!--theme: "AnnArbor"
+Insert background figure. See 
+https://stackoverflow.com/questions/55122778/change-background-in-r-markdown-beamer-presentation
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+{
+\setbeamertemplate{background} 
+{
+    \includegraphics[width=\paperwidth,height=.95\paperheight]{backImage.jpeg}
+}
+}
+
+-->
+
+```{r,echo=FALSE,results='hide'}
+#Install packages if not present
+
+#library(knitr)    # For knitting document and include_graphics function
+#library(ggplot2)  # For plotting
+#library(png)      # For grabbing the dimensions of png files
+
+```
+
+
+
+
+
+
+# Introdução e objetivos
+
+## Prof. Luciane https://altabooks.com.br/produto/utilizando-a-linguagem-r/
+
+![](livroLu.jpeg)
+
+## Prof. João Paulo http://www.livrosabertos.sibi.usp.br/portaldelivrosUSP/catalog/book/752
+
+![](livroJp.png)
+
+
+## Mandalas 
+
+![](shiny_mandala.png)
+
+
+## Mandalas: círculo em Sanscrito
+
+<!--
+![](mandala_colorida_lu.jpeg)-->
+
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+Oxford Languages: substantivo masculino
+
+FILOSOFIA e RELIGIÃO: diagrama de formas geométricas concêntricas, utilizado no hinduísmo, no budismo, nas práticas psicofísicas da ioga e no tantrismo como objeto ritualístico e ponto focal para meditação. Do ponto de vista religioso, o mandala é considerado uma representação do ser humano e do universo; em sua forma menos elaborada, é denominado iantra.
+
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+```{r pressure, echo=FALSE, out.width = '90%'}
+knitr::include_graphics("mandala_colorida_lu.png")
+```
+\end{minipage}
+\end{minipage}
+
+
+<!--
+
+Pq de usar curvas famosas para fazer mandalas? 
+
+Início: Um dos autores tem interesse no assunto de Mandalas devido à simetria e beleza artistica. Neste sentido, surgiram questionamentos sobre o processo de construção e, como consequência, a questão da palestra: Qual é a base Matemática e de progrmação em R para a construção de Mandalas? Os delineamentos levaram às soluções apresentadas aqui nesta palestra e envolvem geometria elementar, programação e visualização. 
+-->
+
+
+## Objetivos
+
+- Descrever e visualizar algumas curvas clássicas
+- Apresentar algumas transformações geométricas
+    - isometria: rotação
+    - isometria: translação
+    - transformação  afim uniforme: contração
+- Realizar rotação, translação e contração em R
+- Construir uma base de pontos para representar uma curva(data frame)
+- Visualizar as Mandalas: ggplot2
+- Criar Mandalas com Matemática e programação R
+
+
+<!--Jp: falar curvas famosas-->
+
+#Algumas curvas famosas
+
+##Curvas clássicas: Círculo
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+\begin{itemize}
+\item  Curvas mais conhecida
+\item fundamental da historia da humanidade
+\item Anterior \textbf{Ahmes}: $\pi\approx 3.16$. 
+\item Associada a invenção da roda.
+\item Equações paramétricas
+$\begin{array}{l}x = r \cos(\theta)\\
+y = r\sin(\theta)\end{array}\hspace{1.0cm}\theta\in[0,2\pi]$
+
+\end{itemize}
+
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%'}
+require(ggplot2)
+n=500
+t=seq(0,2*pi, length.out = n)
+raio=1
+x=raio*cos(t)
+y=raio*sin(t)
+dt=tibble::tibble(x,y)
+
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+p
+```
+\end{minipage}
+\end{minipage}
+
+
+## Elipse
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+\begin{itemize}
+\item $Dist(P,F_1)+Dist(P,F_2)=2a$
+\item Generaliza o círculo
+\item Estudioso: Menaechmus
+\item Estudo em Cônicas
+\item Aplicada em Astronomia
+\item Equações paramétricas:
+$\begin{array}{l}x = a\cdot \cos(\theta)\\
+y =b\cdot \sin(\theta)\end{array}\theta\in[0,2\pi]$
+
+\end{itemize}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%'}
+require(ggplot2)
+n=500
+t=seq(0,2*pi, length.out = n)
+raio1=2
+raio2=2.5
+x=raio1*cos(t)
+y=raio2*sin(t)
+dt=tibble::tibble(x,y)
+
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+p
+```
+\end{minipage}
+\end{minipage}
+
+
+## Cardioide
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+\begin{itemize}
+\item "Similar a um coração"
+
+{\tiny grego kardioeides = kardia: coração + eidos:forma}.  
+
+\item Estudioso: Castillon em 1741
+{\tiny Philosophical Transactions of the Royal Society}
+\item Cilindro rolando sobre outro cilindro. Raios iguais.
+\item Caso particular de uma epiciclóide: raios distintos
+\item Equações paramétricas:
+
+$\begin{array}{l}x = 2r\cos(\theta)-r\cos(2\theta)\\
+y = 2r\sin(\theta)-r\sin(2\theta)\\
+\theta\in[0,2\pi]\end{array}$
+
+\end{itemize}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%'}
+#cardioide
+n=1500
+tetha=seq(0,2*pi, length.out = n)
+raio=1
+x=2*raio*cos(tetha)-raio*cos(2*tetha)
+y=2*raio*sin(tetha)-raio*sin(2*tetha)
+
+dt=tibble::tibble(x,y)
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+p
+```
+\end{minipage}
+\end{minipage}
+
+
+## Limaçon de Pascal
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+\begin{itemize}
+\item Étienne Pascal
+{\tiny pai de Blaise Pascal}
+\item Nome: Gilles-Personne Roberval in 1650
+\item Caso especial: cardioide
+\item Equações paramétricas:
+\end{itemize}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='80%'}
+#cardioide
+#limaçon
+n=1500
+t=seq(0,2*pi, length.out = n)
+raio=1
+k=1*raio
+x=k*cos(t)-raio*cos(2*t)
+y=k*sin(t)-raio*sin(2*t)
+
+dt=tibble::tibble(x,y)
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+
+p
+```
+\end{minipage}
+\end{minipage}
+
+$\begin{array}{l}x=(b+a\cdot\cos(t))\cdot \cos(t)=\dfrac{a}{2}+b\cdot\cos(t)+\dfrac{a}{2}\cdot \cos(2t)\\
+y=(b+a\cdot\cos(t))\cdot \sin(t)=b\cdot\sin(t)+\dfrac{a}{2}\cdot \sin(2t)\\
+\end{array}$
+
+
+## Lemniscata 
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+\begin{itemize}
+\item forma de hélice, o famoso “oito deitado”
+\item representa o sinal matemático do “infinito”
+\item Jacob Bernoulli em 1694
+\item Caso especial um conjunto de curvas mais gerais
+\item significados diversos
+{\tiny  equilíbrio dinâmico, eternidade, etc.}
+\item Parametrização:
+\end{itemize}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%'}
+#lemniscata
+n=1000
+tetha=seq(0,2*pi, length.out = n)
+
+x=sin(tetha)
+y=sin(tetha)*cos(tetha)
+
+dt=tibble::tibble(x,y)
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+
+p
+```
+\end{minipage} 
+
+\hspace{1.0cm}$x = \sin(\theta),\hspace{1.0cm} y = \cos(\theta)sen(\theta),\hspace{.5cm}\theta \in [0,2\pi]$
+
+\vspace{.5cm}
+
+\hspace{1.0cm}$x = \dfrac{a\cdot \sin(\theta)}{1+ \cos^2(\theta)},\hspace{1.0cm} y = \dfrac{a\cdot \cos(\theta)\sin(\theta)}{1+\cos^2(\theta)},\hspace{.5cm}\theta \in [0,2\pi]$
+\end{minipage}
+
+## Espiral de Fermat
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+\begin{itemize}
+\item estudada primeiramente por Fermat em 1636 
+\item Equações paramétricas são: 
+
+
+$\begin{array}{l}x=a\cdot\sqrt{t} \cos(t)\\ 
+y=a\cdot\sqrt{t} \sin(t)\\
+\end{array}t\geqslant 0$
+
+
+\end{itemize}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%'}
+
+#Passo 1: Cálculos e tabela com os pontos P(x,y)
+n = 1500 
+t = seq(0, 6*pi, length.out = n) 
+r = 1 
+x = r*sqrt(t)*cos(t) 
+y = r*sqrt(t)*sin(t) 
+dt = data.frame(x,y)
+
+
+require(ggplot2) #carregando o pacote
+p = ggplot()+
+            coord_fixed()+
+                          theme_void()
+p = p+ 
+      geom_point(data=dt, aes(x=x, y=y), color='black')
+p#visualização
+
+```
+\end{minipage} 
+
+\end{minipage}
+
+
+
+#Visualização com ggplot em R
+
+##Visualizando  com ggplot2: círculo
+
+<!-- * Passo 1: Cálculos e tabela com os pontos $(x,y)$ -->
+```{r echo=T, fig.height=2, fig.width=2, message=FALSE, warning=FALSE}
+#Passo 1: Cálculos e tabela com os pontos P(x,y)
+n = 500; r = 1
+t = seq(0, 2*pi, length.out = n) 
+x = r*cos(t)
+y = r*sin(t)
+dt = data.frame(x,y) 
+```
+
+<!--* Passo 2: Cálculos e tabela com os pontos $(x,y)$ -->
+
+```{r, echo=TRUE,fig.height=4, fig.width=4, message=FALSE, warning=FALSE,results='hide'}
+#Passo 2: Construindo a curva 
+require(ggplot2) #carregando o pacote
+p = ggplot()+
+            coord_fixed()+
+                          theme_void()
+p = p+ 
+      geom_point(data=dt, aes(x=x, y=y), color='black')
+p#visualização
+
+```
+
+## Visualização
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%',fig.align='center'}
+p
+```
+
+##Visualizando com ggplot2: cardiode
+
+<!-- * Passo 1: Cálculos e tabela com os pontos $(x,y)$ -->
+```{r echo=T, fig.height=2, fig.width=2, message=FALSE, warning=FALSE,results='hide'}
+#Passo 1: Cálculos e tabela com os pontos P(x,y)
+n = 500;  r = 1 
+t = seq(0, 2*pi, length.out = n) 
+x = 2*r*cos(t)-r*cos(2*t)
+y = 2*r*sin(t)-r*sin(2*t)
+dt = data.frame(x,y) 
+```
+
+<!--* Passo 2: Cálculos e tabela com os pontos $(x,y)$ -->
+
+```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE,results='hide'}
+#Passo 2: Construindo a curva 
+require(ggplot2) #carregando o pacote
+p = ggplot()+
+            coord_fixed()+
+                          theme_void()
+p = p+ 
+      geom_point(data=dt, aes(x=x, y=y), color='black')
+p#visualização
+
+```
+
+## Visualização
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%',fig.align='center'}
+p
+```
+
+
+##Visualizando com ggplot2: espiral de Fermat
+
+<!-- * Passo 1: Cálculos e tabela com os pontos $(x,y)$ -->
+```{r echo=T, fig.height=2, fig.width=2, message=FALSE, warning=FALSE,results='hide'}
+
+#Passo 1: Cálculos e tabela com os pontos P(x,y)
+n = 1500 
+t = seq(0, 6*pi, length.out = n) 
+r = 1 
+x = r*sqrt(t)*cos(t) 
+y = r*sqrt(t)*sin(t) 
+dt = data.frame(x,y)
+```
+
+<!--* Passo 2: Cálculos e tabela com os pontos $(x,y)$ -->
+
+```{r fig.height=4, fig.width=4, message=FALSE, warning=FALSE,results='hide'}
+#Passo 2: Construindo a curva 
+require(ggplot2) #carregando o pacote
+p = ggplot()+
+            coord_fixed()+
+                          theme_void()
+p = p+ 
+      geom_point(data=dt, aes(x=x, y=y), color='black')
+p#visualização
+
+```
+
+## Visualização
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%',fig.align='center'}
+p
+```
+
+## Reutilização do código de visualização
+
+O código é utilizado em todas as visualizações subsequentes. 
+
+```{r, include=TRUE, eval=FALSE}
+require(ggplot2)
+p = ggplot()+
+            coord_fixed()+
+                          theme_void()
+p = p+ 
+      geom_point(data=dt, aes(x=x, y=y), color='black')
+p
+
+```
+
+$\vspace{5.0cm}$
+
+#Matemática: Transformações Geométricas
+
+##Transformações Geométricas 
+
+![](Isometrias.png)
+
+## Tranformações Geométricas
+
+\begin{itemize}
+\item Isometrias
+\begin{itemize}
+\item preservam distâncias {\tiny surgem como a base do conceito de Congruência} 
+\item Figuras transformadas por isometrias possuem mesmas características: área, perímetro, forma. 
+\item congruência no plano: composição de transformações rígidas
+\item F e G transformações no plano, então $S\circ F$ é transformação . 
+\end{itemize}
+\item Transformação afim: contração
+\begin{itemize}
+\item transformação afim  modifica as dimensões do objeto. 
+Dado $P(x,y)$, a transformação: 
+$$x’=c_1x\hspace{1.0cm} y’=c_1y$$
+gera $P’(x’,y’)$. 
+\item $c_1=c_2=1$ mantém objeto. 
+\item $c_1=c_2<1$ reduz tamanho do objeto.  
+\end{itemize}
+\end{itemize}
+
+## Transformações Geométricas
+
+![ ](Isometrias1.png)
+<!--Fonte: https://www.geogebra.org/classic/cmzjs3kd -->
+
+# Aplicações: Construção de Mandalas
+
+## Mandala da vida: círculos base
+
+<!-- A base desta mandala é formada por três círculos que representam a divisão celular, o ínicio da geração da vida.-->
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%'}
+#Parâmetros 
+n=500; raio=1; t=seq(0,2*pi, length.out = n)
+#pontos para círculo inicial
+x=raio*cos(t)
+y=raio*sin(t)
+#pontos para os 3 círculos
+xt=c(x,x-raio,x-2*raio)
+yt=c(y,y,y)
+
+dt=data.frame(xt,yt,z="circulo")
+
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+p
+```
+
+## Visualização
+```{r eval=F, include=T}
+#Parâmetros 
+n=500; raio=1; t=seq(0,2*pi, length.out = n)
+#pontos para círculo inicial
+x=raio*cos(t)
+y=raio*sin(t)
+#pontos para os 3 círculos
+xt=c(x,x-raio,x-2*raio)
+yt=c(y,y,y)
+
+p= ggplot()+
+coord_fixed()+
+    theme_void()
+p=p+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+p
+
+```
+
+##Mandala da vida: rotações $\Large\pi/8, 2\pi/8, ...,2\pi$
+
+<!-- A partir dos 3 círculos faremos rotações nestes pontos, variando de $\Large\pi/8, 2\pi/8, ...,2\pi$-->
+
+```{r,include=TRUE ,eval=FALSE}
+rotacao = (pi/8)*(1:16); n=length(xt); xt1=xt; yt1=yt
+for(i in 1:length(rotacao))
+  {
+xt1=c(xt1,xt[1:n]*cos(rotacao[i])-yt[1:n]*sin(rotacao[i]))
+yt1=c(yt1,xt[1:n]*sin(rotacao[i])+yt[1:n]*cos(rotacao[i])) 
+}
+dt= data.frame(xt1,yt1,z="circulo")
+p= ggplot()+
+coord_fixed()+
+    theme_void()
+p=
+  p+
+   geom_point(data=dt, aes(x=xt1, y=yt1), color='black')
+p
+```
+
+## Visualização Mandala da vida
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,out.width='90%',fig.align='center'}
+rotacao = (pi/8)*(1:16); n=length(xt); xt1=xt; yt1=yt
+for(i in 1:length(rotacao))
+  {
+xt1=c(xt1,xt[1:n]*cos(rotacao[i])-yt[1:n]*sin(rotacao[i]))
+yt1=c(yt1,xt[1:n]*sin(rotacao[i])+yt[1:n]*cos(rotacao[i])) 
+}
+dt= data.frame(xt1,yt1,z="circulo")
+p= ggplot()+
+coord_fixed()+
+    theme_void()
+p=
+  p+
+   geom_point(data=dt, aes(x=xt1, y=yt1), color='black')
+p
+```
+
+
+##Mandala do infinito: Lemniscata
+
+Sobreposição: Lemniscata com rotações $\large\pi/4, \pi/2,3\pi/4$ e 3 contrações por fatores 25%, 50% e 75%.
+
+```{r eval=T, include=T}
+n=500; t=seq(0, 2*pi, length.out = n); rotacao=pi/4*(1:3) 
+x=sin(t);  y=sin(t)*cos(t)
+xt=x; yt=y#rotações
+for(i in 1:length(rotacao)){
+xt=c(xt, x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt, x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i])) }
+xtt=NULL; ytt=NULL; red=c(0.25, 0.5, 0.75) #redução
+for(i in 1:length(red)){
+provx=paste0("x",i); provy=paste0("y",i)
+xtt=c(xtt, assign(provx, xt*red[i]))
+ytt=c(ytt, assign(provy, yt*red[i])) }
+dt=data.frame(x=c(xt, xtt), y=c(yt, ytt), z="lemniscata")
+```
+
+##Visualização
+
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+#O pontos da mandala armazenados em dt
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+p
+```
+
+##Mandala do coração: cardioide
+Rotações variando de $\large\pi/4, \pi/2,3\pi/4, \pi, ..., 2\pi$
+
+```{r eval=T, include=T}
+n=500; t=seq(0, 2*pi, length.out = n); rotacao=pi/4*(1:7) 
+x=c(2*raio*cos(t)-raio*cos(2*t))
+y=c(2*raio*sin(t)-raio*sin(2*t))
+xt=x; yt=y #rotação dos pontos
+for(i in 1:length(rotacao)){
+xt=c(xt, x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt, x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))
+}
+dt= data.frame(xt, yt, z="cardióide")
+```
+
+##Visualização
+
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()+ 
+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+p
+```
+
+##Mandala 3 corações: cardioide
+Dois estágios: rotações em $\pi/2, \pi, 3\pi/2$ e rotação da figura gerada em $\pi/6, -\pi/6$
+
+```{r eval=T, include=T}
+n=500; t=seq(0, 2*pi, length.out = n); 
+raio=1; rotacao=pi/2*(1:3) 
+x=c(2*raio*cos(t)-raio*cos(2*t))
+y=c(2*raio*sin(t)-raio*sin(2*t))
+xt=x; yt=y 
+for(i in 1:length(rotacao)){
+  xt=c(xt, x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+  yt=c(yt, x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))}
+  rotacao = c(pi/8,-pi/8); xt1=NULL; yt1=NULL; n=length(xt)
+for(i in 1:length(rotacao)){
+  xt1=c(xt1,xt[1:n]*cos(rotacao[i])-yt[1:n]*sin(rotacao[i]))
+  yt1=c(yt1,xt[1:n]*sin(rotacao[i])+yt[1:n]*cos(rotacao[i]))}
+  dt= data.frame(x=c(xt, xt1), y=c(yt, yt1), z="cardióide")
+```
+
+##Visualização
+
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+p
+```
+
+##Muitas Possibilidades
+
+\begin{itemize}
+\item O número de combinações para produção de figuras distintas depende apenas do usuário
+\item As curvas famosas(clássicas) podem ser utilizadas em um número infinito de possibilidades
+\item Outras curvas podem ser adicionadas às curvas apresentadas: círculo, elipse, deltoide, astroide, limaçon, lemniscata, cardioide
+\item Variação do ângulo de rotação, combinação das contrações e posições
+\end{itemize}
+
+
+#Algumas combinações interessantes 
+
+## Outras construções: 01
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+n=1500#limaçon
+tetha=seq(0,2*pi, length.out = n)
+
+x=cos(tetha)*(2*cos(tetha)+1)
+y=sin(tetha)*(2*cos(tetha)+1)
+
+dt=tibble::tibble(x,y)
+rotacao=(pi/4)*(1:7)
+xt=x
+yt=y
+for(i in 1:length(rotacao)){
+xt=c(xt,x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt,x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))
+}
+
+
+#dt = base de dados com todos os pontos da mandala
+dt=tibble::tibble(xt,yt)
+#summary(dt)
+contracao = 0.25
+xt2=xt*contracao
+yt2=yt*contracao
+dt2=tibble::tibble(xt2,yt2)
+contracao = 0.5
+xt3=xt*contracao
+yt3=yt*contracao
+dt3=tibble::tibble(xt3,yt3)
+contracao = 0.75
+xt4=xt*contracao
+yt4=yt*contracao
+dt4=tibble::tibble(xt4,yt4)
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+
+
+
+p = p+
+  geom_point(data=dt4, aes(x=xt4, y=yt4), color='black')
+p
+```
+
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+
+n=1500#astroide
+tetha=seq(0,2*pi, length.out = n)
+
+x=2*cos(tetha)+cos(2*tetha)
+y=2*sin(tetha)-sin(2*tetha)
+
+dt=tibble::tibble(x,y)
+rotacao=pi/4*(1:7)
+xt=x
+yt=y
+for(i in 1:length(rotacao)){
+xt=c(xt,x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt,x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))
+}
+
+#dt = base de dados com todos os pontos da mandala
+dt=tibble::tibble(xt,yt)
+#Redução
+contracao = 0.75
+xt4=xt*contracao
+yt4=yt*contracao
+dt4=tibble::tibble(xt4,yt4)
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+
+p = p+
+  geom_point(data=dt4, aes(x=xt4, y=yt4), color='black')
+p
+```
+\end{minipage}
+\end{minipage}
+
+
+## Outras construções: 02
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+n=1500#Deltoide
+tetha=seq(0,2*pi, length.out = n)
+
+x=3*cos(tetha)^3
+y=3*sin(tetha)^3
+
+dt=tibble::tibble(x,y)
+rotacao=c(pi/4,pi/2,3*pi/4,pi, 3*pi/2)
+xt=x
+yt=y
+for(i in 1:length(rotacao)){
+xt=c(xt,x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt,x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))
+}
+
+#dt = base de dados com todos os pontos da mandala
+dt=tibble::tibble(xt,yt)
+#summary(dt)
+contracao = 0.25
+xt2=xt*contracao
+yt2=yt*contracao
+dt2=tibble::tibble(xt2,yt2)
+contracao = 0.5
+xt3=xt*contracao
+yt3=yt*contracao
+dt3=tibble::tibble(xt3,yt3)
+contracao = 0.75
+xt4=xt*contracao
+yt4=yt*contracao
+dt4=tibble::tibble(xt4,yt4)
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+
+p = p+
+  geom_point(data=dt2, aes(x=xt2, y=yt2), color='black')
+
+p = p+
+  geom_point(data=dt3, aes(x=xt3, y=yt3), color='black')
+
+p = p+
+  geom_point(data=dt4, aes(x=xt4, y=yt4), color='black')
+p
+
+```
+
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+
+n=500#cubo de metatron
+theta=seq(0,2*pi, length.out = n)
+raio=1
+deslocamento = c(-4,-2,0,2,4) 
+
+x1=seq(-4,4,length.out = n)
+y1=rep(0,length(x1))
+for(i in 1:length(deslocamento)){
+  #construindo 5 círculos 
+x1=c(x1,raio*cos(theta)+deslocamento[i])
+y1=c(y1,raio*sin(theta))}
+
+#rotacionando os cinco círculos
+#rotação de 30, 90 e 150 graus
+rotacao=pi/6*seq(1,5,2)
+n=length(x1)
+xt1=NULL
+yt1=NULL
+for(i in 1:length(rotacao)){
+xt1=c(xt1,x1[1:n]*cos(rotacao[i])-y1[1:n]*sin(rotacao[i]))
+yt1=c(yt1,x1[1:n]*sin(rotacao[i])+y1[1:n]*cos(rotacao[i]))
+}
+
+#os pontos centrais dos círculos com rotação
+#São 15 pontos representam os centros dos círculos
+
+xd0=deslocamento
+yd0=rep(0,length(deslocamento))
+xd=NULL; yd=NULL
+for(i in 1:length(rotacao)){
+
+xd=c(xd,xd0[1:length(deslocamento)]*cos(rotacao[i])-yd0[1:length(deslocamento)]*sin(rotacao[i]))
+yd=c(yd,xd0[1:length(deslocamento)]*sin(rotacao[i])+yd0[1:length(deslocamento)]*cos(rotacao[i]))
+}
+
+td = data.frame(xd,yd)
+
+#construindo as linhas do cubo de forma iterativa
+rep=500
+x=NULL
+y=NULL
+n=(length(xd)-1)
+for(i in 1:n){
+  for(j in i:n){
+    x=c(x,seq(xd[i],xd[j+1],length.out=rep))
+    y=c(y,seq(yd[i],yd[j+1],length.out=rep))
+  } }
+
+
+df1=tibble::tibble(x,y,z="metatron")
+
+dt1=tibble::tibble(xt1,yt1,z="metatron")
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt1, aes(x=xt1, y=yt1), color='black')
+
+
+p = p+
+  geom_point(aes(x = x, y), data = df1)
+
+p
+
+
+```
+\end{minipage}
+\end{minipage}
+
+
+## Outras construções: 03
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+#ying e yang
+n=1600; raio=4; t=seq(0,2*pi, length.out = n)
+#pontos para círculo inicial
+x=raio*cos(t)
+y=raio*sin(t)
+#pontos para os círculos
+xt=c(x, 0.1*x,  0.1*x,   0.5*x[(n/4):(3*n/4)],   0.5*x[c(1:(n/4),(3*n/4):n)] )
+yt=c(y, 0.1*y-2,0.1*y+2, 0.5*y[(n/4):(3*n/4)]+2, 0.5*y[c(1:(n/4),(3*n/4):n)]-2)
+
+dt=data.frame(xt,yt,z="circulo")
+
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=xt, y=yt), color='black')
+p
+```
+
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+#sentimentos
+n=500
+theta=seq(0,2*pi, length.out = n)
+raio=2
+
+x1=raio*cos(theta)
+y1=raio*sin(theta)
+deslocamento = c(-1,1) 
+x=NULL;y=NULL
+for(i in 1:length(deslocamento)){
+  #construindo 2 círculos 
+x=c(x,x1+deslocamento[i])
+y=c(y,y1)}
+
+td1 = data.frame(x,y,z="sentimento")
+
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=td1, aes(x=x, y=y), color='black')
+
+#elipse dos olhos
+
+x1=c(0.05*cos(theta),0.05*cos(theta)-2,0.05*cos(theta)+2)
+y1=c(0.25*sin(theta)+1,0.25*sin(theta)+1,0.25*sin(theta)+1)
+
+td2 = data.frame(x=x1,y=y1,z="sentimento")
+
+p=p+ 
+geom_point(data=td2, aes(x=x, y=y), color='black')
+#boca como infinito
+t=seq(-pi/2,pi/2, length.out = n)
+a=2
+x=a*sin(t)/(1+cos(t)^2)
+y=a/1.1*cos(t)*sin(t)/(1+cos(t)^2)-0.5
+
+td3 = data.frame(x,y,z="sentimento")
+
+p=p+ 
+geom_point(data=td3, aes(x=x, y=y), color='black')
+p
+```
+\end{minipage}
+\end{minipage}
+
+##Desafio: Quais curvas compõem as Mandalas? 
+
+\begin{minipage}{\textwidth}
+\begin{minipage}{.5\textwidth}
+
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+n=1500#Circulos e infinito
+theta=seq(0,2*pi, length.out = n)
+raio1=1
+raio2=1
+
+x=raio1*cos(theta)
+y=raio2*sin(theta)
+
+dt=tibble::tibble(x,y)
+
+#infinito reduzido para altura 0.2 (ou seja 20% do diametro do círculo
+reducao=0.2
+x1=sin(theta)*cos(theta)*reducao/2
+y1=sin(theta)*reducao/2+(1+reducao/2)
+
+dt1=tibble::tibble(x1,y1)
+
+#círculo de raio 1.2
+raio1=1.2
+raio2=1.2
+
+x2=raio1*cos(theta)
+y2=raio2*sin(theta)
+
+dt2=tibble::tibble(x2,y2)
+
+
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt, aes(x=x, y=y), color='black')
+p=p+
+geom_point(data=dt1, aes(x=x1, y=y1), color='black')+
+geom_point(data=dt2, aes(x=x2, y=y2), color='black')
+
+
+#rotacionando o infinito
+rotacao=c(pi/2,pi, 3*pi/2)
+xt=x1
+yt=y1
+for(i in 1:length(rotacao)){
+xt=c(xt,x1[1:n]*cos(rotacao[i])-y1[1:n]*sin(rotacao[i]))
+yt=c(yt,x1[1:n]*sin(rotacao[i])+y1[1:n]*cos(rotacao[i]))
+}
+
+dt1=tibble::tibble(xt,yt)
+
+p=p+
+geom_point(data=dt1, aes(x=xt, y=yt), color='black')
+p
+
+```
+
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+#Espiral de Fermat
+n = 1600 #define a quantidade de pontos para plotar o gráfico
+t = seq(0, 6*pi, length.out = n) 
+r = 1 #define o raio da circunferência
+x = r*sqrt(t)*cos(t) 
+y = r*sqrt(t)*sin(t) 
+
+dt = data.frame(x,y) #cria os pares ordenados dos pontos da curva
+rotacao=c(-pi)
+xt=x
+yt=y
+for(i in 1:length(rotacao)){
+xt=c(xt,x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt,x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))
+}
+
+dt=tibble::tibble(xt,yt)
+dt1=tibble::tibble(x=c(xt,xt),y=c(yt, -yt))
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt1, aes(x=x, y=y), color='black')
+p
+
+```
+\end{minipage}
+\end{minipage}
+<!-- 
+## Mais um desafio
+
+```{r echo=FALSE, out.width='90%',fig.align='center'}
+#Espiral de Fermat
+n = 1500 #define a quantidade de pontos para plotar o gráfico
+t = seq(0, 6*pi, length.out = n) 
+r = 1 #define o raio da circunferência
+x = r*t*cos(t) 
+y = r*t*sin(t) 
+
+dt = data.frame(x,y) #cria os pares ordenados dos pontos da curva
+rotacao=c(-pi)
+xt=x
+yt=y
+for(i in 1:length(rotacao)){
+xt=c(xt,x[1:n]*cos(rotacao[i])-y[1:n]*sin(rotacao[i]))
+yt=c(yt,x[1:n]*sin(rotacao[i])+y[1:n]*cos(rotacao[i]))
+}
+
+dt=tibble::tibble(xt,yt)
+dt1=tibble::tibble(x=c(xt,xt),y=c(yt, -yt))
+p=
+ggplot()+
+coord_fixed()+
+    theme_void()
+
+p=p+ 
+geom_point(data=dt1, aes(x=x, y=y), color='black')
+p
+
+```
+-->
+
+
+## Conclusões 
+
+\begin{itemize}
+\item Construções interessantes com utilização de curvas matemáticas famosas
+\item Muitas possibilidades de construção: apenas iniciando
+\item Ilustração de programação com R em nível elementar e curioso
+\item Ilustração da programação com R em nível avançado
+\item Trabalhos futuros
+\begin{itemize}
+\item Especialização: funções para geração de Mandalas
+\item Melhorias do App Shiny
+\item Animações com R/Shiny
+\item Explorar outras formas e combinações de curvas famosas
+\end{itemize}
+\end{itemize}
+
+
+##Adicionais
+
+Acesso ao ebook de mandalas para impressão
+(https://github.com/Lucianea/Mandalas/blob/main/Livro_de_Mandalas.pdf)
+
+Acesso ao aplicativo shiny: (https://lucianealcoforado.shinyapps.io/Mandala/)
+
+Obrigado, Gracias, Thanks!
+
+
+
+
+## Referências 
+
+\tiny
+
+* Bezerra, J. 2022. “Mandalas.” Toda Materia. https://www.todamateria.com.br/mandala/.
+
+* Coxeter, H. S.M., and S. L. Greitzer. 1967. Geometry Revisited. The Mathematical Association of America.
+
+* Ferréol, R., S. Boureau, and A Esculier. 2017. “2D Curves.” https://mathcurve.com/courbes2d.gb/lemniscate/lemniscate.shtml#:~:text=\%2D\%20the\%20lemniscate\%20of\%20Bernoulli\%20is,they\%20correspond\%20to\%20minima...
+
+* Medeiros, D.S. 2022. “Aula Interativa: Ciclóides.” https://aulainterativa.ect.ufrn.br/cicloides/.
+
+* Nascimento Venceslau, Allisson Wesley do. 2015. “Curvas Parametrizadas, Ciclóides, Experimentos E Aplicações.” Universidade Federal de Sergipe.
+
+* O’Connor, John, and Edmund Robertson. 2001. “A History of Pi.” MacTutor. https://mathshistory.st-andrews.ac.uk/HistTopics/Pi_through_the_ages/.
+
+* ———. 2022a. “Curves: Circle.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Circle/.
+
+* ———. 2022b. “Curves: Elipse.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Ellipse/.
+
+* ———. 2022c. “Curves: Cardioid.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Cardioid/.
+
+* ———. 2022d. “Curves: Hypocycloid.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Hypocycloid/.
+
+* ———. 2022e. “Curves: Astroid.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Astroid/.
+
+* ———. 2022f. “Curves: Fermats.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Fermats/.
+
+* ———. 2022g. “Curves: Lemacon of Pascal.” MacTutor. https://mathshistory.st-andrews.ac.uk/Curves/Limacon/.
+
+* Hadley Wickham, ggplot2: Elegant Graphics for Data Analysis, Springer-Verlag New York, 2016.
+
+* Kirill Müller and Hadley Wickham, tibble: Simple Data Frames, 2020, R package version 3.0.4. Disponível em https://CRAN.R-project.org/package=tibble.
+
+* Yihui Xie (2021). knitr: A General-Purpose Package for
+  Dynamic Report Generation in R. R package version 1.33.
+
+* Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd
+  edition. Chapman and Hall/CRC. ISBN 978-1498716963
+
+* Yihui Xie (2014) knitr: A Comprehensive Tool for
+  Reproducible Research in R. In Victoria Stodden, Friedrich
+  Leisch and Roger D. Peng, editors, Implementing Reproducible
+  Computational Research. Chapman and Hall/CRC. ISBN
+  978-1466561595
+* Sunil, M., and R. Kosawatta. 2017. CliffsNotes Geometry Common Core Quick Review. HMH Books.
+
+
+## Referências
+\tiny
+* Weisstein, Eric W. 20022a. “Ellipse.” From MathWorld–A Wolfram Web Resource. https://mathworld.wolfram.com/Ellipse.html.
+
+* ———. 20022b. “Cardioid.” From MathWorld–A Wolfram Web Resource. https://mathworld.wolfram.com/Cardioid.html.
+
+* ———. 20022c. “Deltoid.” From MathWorld–A Wolfram Web Resource. https://mathworld.wolfram.com/Deltoid.html.
+
+* ———. 20022d. “Astroid.” From MathWorld–A Wolfram Web Resource. https://mathworld.wolfram.com/Astroid.html.
+
+
+ 
