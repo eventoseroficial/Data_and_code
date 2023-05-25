@@ -1,4 +1,19 @@
-# Compartilhe o seu banco de dados e código R para o VI Seminário Internacional de Estatística com R  
+## Introdução à produção de gráficos interativos com {ggiraph}
+### Icaro Bernardes dos Santos Coutinho	
+https://icarobernardes.github.io/curso-ggiraph/#/section
+
+## O Problema do Aniversário, o pacote IPSUR e seu plugin para o R Commander: uma possibilidade para sala de aula
+### Felipe Rafael Ribeiro Melo	
+https://feliperafaelrm.github.io/Palestra-IPSUR-VII-SER/Guia_Palestra_Felipe_Ribeiro_VII_SER.html
+
+## Uso do duckdb com R
+### Thiago de Oliveira Pires	
+https://th1460.github.io/duckdb-ser/#/title-slide
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+# Compartilhe o seu banco de dados e código R para o VII Seminário Internacional de Estatística com R  
 
 ### O SER segue as diretrizes da pesquisa reprodutível. Nesse sentido, pedimos aos palestrantes que compartilhem os bancos de dados, códigos R e slides utilizados na palestra.
 
