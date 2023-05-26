@@ -23,7 +23,17 @@ https://feliperafaelrm.github.io/Palestra-IPSUR-VII-SER/Guia_Palestra_Felipe_Rib
 ### Thiago de Oliveira Pires	
 https://th1460.github.io/duckdb-ser/#/title-slide
 
+------------------------------------------------------------------------------------------------------------------------------
+# EDUCA SER 
 
+## Oficina: Visualização de dados com ggplot2	
+### Natália Santana Paiva	
+https://github.com/natpaiva/graficos_ggplot2
+https://rpubs.com/Brochini/ggplot_2023
+
+## A história dos primeiros anos de colonização do Brasil contada através de mapas interativos
+### Marcus Antonio Cardoso Ramalho
+https://github.com/nextmarte/Educaser-Maps
 
 ------------------------------------------------------------------------------------------------------------------------------
 # Compartilhe o seu banco de dados e código R para o VII Seminário Internacional de Estatística com R  
