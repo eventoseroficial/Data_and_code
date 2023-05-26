@@ -1,3 +1,16 @@
+## Deslocamentos e gastos hospitalares dos municípios brasileiros
+### Fernando Almeida Barbalho	
+https://github.com/tchiluanda/siconfi_atendimento_hospitalar
+https://siconfi-atendimento-hospitalar.tesouro.gov.br/
+
+## Quarto book: Contando histórias com Quarto
+### Ariane Hayana Thomé de Farias	
+https://ariane.quarto.pub/ser_2023/#/title-slide
+
+## O Quarto como ferramenta de PKM para pesquisa científica
+### Marcus Antonio Cardoso Ramalho	
+https://github.com/nextmarte/site-ser-pkm
+
 ## Introdução à produção de gráficos interativos com {ggiraph}
 ### Icaro Bernardes dos Santos Coutinho	
 https://icarobernardes.github.io/curso-ggiraph/#/section
